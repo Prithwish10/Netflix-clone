@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { LoginWithEmailAndPassword } from "../services/auth/LoginWithEmailAndPassword";
-import { SignUp } from "../services/auth/SignUp.service.";
+import { SignUpService } from "../services/auth/SignUp.service.";
 import Logger from '../loaders/logger';
 import { signupSchema } from '../services/auth/auth.validation.schema'
 
@@ -12,7 +12,7 @@ export class AuthController {
         // Validating the request body
         await signupSchema.validateAsync(req.body);
 
-        const signupService = new SignUp();
+        const signupService = new SignUpService();
         const user = await signupService.register(req.body);
 
         return res.status(201).json({
