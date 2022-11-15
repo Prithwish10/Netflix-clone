@@ -1,9 +1,11 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
-// import routes from '../routes';
+import routes from "../routes/index";
 import config from "../config/index";
-export default ({ app }: { app: Application }) => {
+import { BaseError } from "../util/error-handling/BaseError";
+import { handle404Error, handle422Error, handleError } from '../middleware/ErrorHandling';
 
+export default ({ app }: { app: Application }) => {
   app.enable("trust proxy");
 
   app.use(cors());
@@ -11,32 +13,24 @@ export default ({ app }: { app: Application }) => {
   app.use(express.json());
 
   // Load API routes
-  // app.use(config.api.prefix, routes(app));
+  app.use(config.api.prefix, routes());
 
-  /// catch 404 and forward to error handler
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    const err: any = new Error("Not Found");
-    err["status"] = 404;
-    next(err);
-  });
+  // catch 404 and forward to error handler
+  app.use(handle404Error);
+
+  // catch 422 Error and forward to error handler
+  app.use(handle422Error);
 
   /// error handlers
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    /**
-     * Handle 401 thrown by express-jwt library
-     */
-    if (err.name === "UnauthorizedError") {
-      return res.status(err.status).send({ message: err.message }).end();
-    }
-    return next(err);
-  });
+  // app.use((err: ResponseError, req: Request, res: Response, next: NextFunction) => {
+  //   /**
+  //    * Handle 401 thrown by express-jwt library
+  //    */
+  //   if (err.name === "UnauthorizedError") {
+  //     return res.status(err.status || 401).send({ message: err.message }).end();
+  //   }
+  //   return next(err);
+  // });
 
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || 500);
-    res.json({
-      errors: {
-        message: err.message,
-      },
-    });
-  });
+  app.use(handleError);
 };
