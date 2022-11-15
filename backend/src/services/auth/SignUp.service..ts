@@ -6,7 +6,7 @@ import { UserRepository } from '../../repositories/User.repository';
 import { Api500Error } from '../../util/error-handling/Api500Error';
 import { Api409Error } from '../../util/error-handling/Api409Error';
 
-export class SignUp {
+export class SignUpService {
     async register(userInputDTO: UserInputPayload) {
         Logger.debug('Inside signup service');
         const { username, email, password, profilePic, isAdmin } = userInputDTO;
@@ -25,7 +25,7 @@ export class SignUp {
 
         const hashedPassword = CryptoJS.AES.encrypt(password, config.SecretKey).toString();
 
-        const newUser = await  userRepository.createUser(username, email, hashedPassword, profilePic, isAdmin);
+        const newUser = await userRepository.createUser(username, email, hashedPassword, profilePic, isAdmin);
 
         return newUser;
     }
