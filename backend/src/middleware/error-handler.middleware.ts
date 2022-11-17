@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { Api404Error } from "../util/error-handling/Api404Error";
-import { BaseError } from "../util/error-handling/BaseError";
+import { Api404Error } from "../util/error-handler/Api404Error";
+import { BaseError } from "../util/error-handler/BaseError";
 
 const handle422Error = (
   err: BaseError,
@@ -23,16 +23,16 @@ const handle422Error = (
   return next(err);
 };
 
-const handle404Error = (
-    err: BaseError,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    console.log('Error => ', err.name)
-    err = new Api404Error('Unauthorised');
-    next(err);
-  };
+// const handle404Error = (
+//   err: BaseError,
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   console.log("Error => ", err.name);
+//   err = new Api404Error("Unauthorised");
+//   next(err);
+// };
 
 const handleError = (
   err: BaseError,
@@ -50,4 +50,4 @@ const handleError = (
   });
 };
 
-export { handle404Error, handle422Error, handleError }
+export {  handle422Error, handleError };
