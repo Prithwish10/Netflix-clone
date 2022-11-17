@@ -21,3 +21,13 @@ export interface UserInputPayload {
   profilePic?: string;
   isAdmin?: string;
 }
+
+
+export interface UpdateUserPayload {
+  id: string,
+  email?: string,
+  password?: string,
+  username?: string,
+  profilePic?: string,
+  isAdmin?: string
+}

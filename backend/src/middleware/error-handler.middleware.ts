@@ -45,9 +45,10 @@ const handleError = (
     errors: {
       success: false,
       message: err.message,
+      description: err.name,
       statuscode: err.statusCode,
     },
   });
 };
 
-export {  handle422Error, handleError };
+export { handle422Error, handleError };

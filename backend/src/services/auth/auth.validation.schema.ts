@@ -14,4 +14,9 @@ const loginWithEmailAndPasswordSchema = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
-export { signupSchema, loginWithEmailAndPasswordSchema };
+const resetPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required(),
+});
+
+export { signupSchema, loginWithEmailAndPasswordSchema, resetPasswordSchema };
