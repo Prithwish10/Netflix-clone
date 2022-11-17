@@ -10,6 +10,13 @@ async function startServer() {
   try {
     await require("./loaders/Express").default({ app });
 
+    const mongoConnection = await mongooseLoader();
+    Logger.info(`
+      ################################################
+      🛡️  Db connected successfully !! 🛡️
+      ################################################
+    `);
+
     app
       .listen(config.port, () => {
         Logger.info(`
@@ -22,16 +29,8 @@ async function startServer() {
         Logger.error(err);
         process.exit(1);
       });
-
-    const mongoConnection = await mongooseLoader();
-    Logger.info(`
-      ################################################
-      🛡️  Db connected successfully !! 🛡️
-      ################################################
-    `);
   } catch (err) {
-    if(err instanceof Error)
-      throw new Api500Error(err.message);
+    if (err instanceof Error) throw new Api500Error(err.message);
   }
 }
 

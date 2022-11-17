@@ -5,6 +5,8 @@ import { Api500Error } from "../util/error-handler/Api500Error";
 import jwt from "jsonwebtoken";
 import { IUser } from "../dto/IUser.dto";
 import { TokenPayload } from "../dto/Token-payload.dto";
+import { Api403Error } from "../util/error-handler/Api403Error";
+import Logger from "../loaders/logger";
 
 declare global {
   namespace Express {
@@ -29,12 +31,21 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 
   try {
     const payload = jwt.verify(token, config.jwtSecret) as TokenPayload;
-    console.log('Payload => ',payload)
+    Logger.debug("Auth Payload  %o", payload);
     req.user = payload;
     next();
   } catch (err) {
     if (err instanceof Error) {
+      Logger.error(err);
       throw new Api500Error(err.message);
     }
+  }
+}
+
+export function authRole(req: Request, res: Response, next: NextFunction) {
+  if (req.params.id === req.user.id || req.user.isAdmin) {
+    next();
+  } else {
+    throw new Api403Error("Forbidden");
   }
 }

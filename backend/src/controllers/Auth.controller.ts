@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { LoginWithEmailAndPasswordService } from "../services/auth/LoginWithEmailAndPassword.service";
 import { SignUpService } from "../services/auth/SignUp.service.";
+import { resetPasswordSchema } from "../services/auth/auth.validation.schema";
+import { ResetPasswordService } from "../services/auth/ResetPassword.service";
 import Logger from "../loaders/logger";
 import {
   loginWithEmailAndPasswordSchema,
@@ -20,7 +22,8 @@ export class AuthController {
       return res.status(201).json({
         success: true,
         message: "Thanks for signing in!",
-        data: user,
+        statusCode: 201,
+        user,
       });
     } catch (err) {
       Logger.error("Error occured: ", err);
@@ -51,7 +54,8 @@ export class AuthController {
       return res.status(201).json({
         success: true,
         message: "You have successfully logged in!",
-        data
+        statusCode: 201,
+        data,
       });
     } catch (err) {
       Logger.error("Error occured: ", err);
@@ -73,5 +77,34 @@ export class AuthController {
     next: NextFunction
   ) {
     Logger.debug("Calling signup service with body: %o", req.body);
+  }
+
+  public async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const resetPasswordService = new ResetPasswordService();
+
+      await resetPasswordSchema.validateAsync(req.body);
+
+      const { email, password } = req.body;
+      const user = await resetPasswordService.reset(
+        req.params.id,
+        req.params.token,
+        email,
+        password
+      );
+      console.log("user =>", user);
+      return res.status(201).json({
+        success: true,
+        message: "Password reset successfully!",
+        statusCode: 201,
+        user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  public async forgotPassword(req: Request, res: Response, next: NextFunction) {
+      
   }
 }
