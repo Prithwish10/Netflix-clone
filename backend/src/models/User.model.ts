@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { IUser } from "../dto/IUser.dto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -29,4 +30,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model<IUser & mongoose.Document>("User", userSchema);

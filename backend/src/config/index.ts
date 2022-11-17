@@ -22,6 +22,7 @@ export default {
     },
 
     SecretKey: process.env.SECRET_KEY,
+    jwtSecret: process.env.JWT_SECRET,
 
     /**
      * API configs

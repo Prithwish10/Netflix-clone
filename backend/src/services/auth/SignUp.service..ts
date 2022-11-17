@@ -3,8 +3,9 @@ import { UserInputPayload } from "./Auth.dto";
 import config from '../../config/index'
 import Logger from '../../loaders/logger'
 import { UserRepository } from '../../repositories/User.repository';
-import { Api500Error } from '../../util/error-handling/Api500Error';
-import { Api409Error } from '../../util/error-handling/Api409Error';
+import { Api500Error } from '../../util/error-handler/Api500Error';
+import { Api409Error } from '../../util/error-handler/Api409Error';
+import { IUser } from '../../dto/IUser.dto';
 
 export class SignUpService {
     async register(userInputDTO: UserInputPayload) {

@@ -2,8 +2,8 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import routes from "../routes/index";
 import config from "../config/index";
-import { BaseError } from "../util/error-handling/BaseError";
-import { handle404Error, handle422Error, handleError } from '../middleware/ErrorHandling';
+import { BaseError } from "../util/error-handler/BaseError";
+import { handle422Error, handleError } from '../middleware/error-handler.middleware';
 
 export default ({ app }: { app: Application }) => {
   app.enable("trust proxy");
@@ -15,22 +15,12 @@ export default ({ app }: { app: Application }) => {
   // Load API routes
   app.use(config.api.prefix, routes());
 
+   // catch 422 Error and forward to error handler
+   app.use(handle422Error);
+
   // catch 404 and forward to error handler
-  app.use(handle404Error);
+  // app.use(handle404Error);
 
-  // catch 422 Error and forward to error handler
-  app.use(handle422Error);
-
-  /// error handlers
-  // app.use((err: ResponseError, req: Request, res: Response, next: NextFunction) => {
-  //   /**
-  //    * Handle 401 thrown by express-jwt library
-  //    */
-  //   if (err.name === "UnauthorizedError") {
-  //     return res.status(err.status || 401).send({ message: err.message }).end();
-  //   }
-  //   return next(err);
-  // });
-
+  // error handlers
   app.use(handleError);
 };

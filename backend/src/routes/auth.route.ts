@@ -8,8 +8,13 @@ const route = Router();
 export default (app: Router) => {
     app.use('/auth', route);
 
+    const authController = new AuthController();
+
     route.post('/signup', async (req: Request, res: Response, next: NextFunction) => {
-        const signup = new AuthController();
-        await signup.signup(req, res, next);
+        await authController.signup(req, res, next);
+    });
+
+    route.post('/signin', async (req: Request, res: Response, next: NextFunction) => {
+        await authController.signInWithEmailAndPassword(req, res, next);
     });
 }

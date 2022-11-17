@@ -1,7 +1,7 @@
 import Logger from "../loaders/logger";
-import User from "../models/User";
-import { Api409Error } from "../util/error-handling/Api409Error";
-import { Api500Error } from "../util/error-handling/Api500Error";
+import User from "../models/User.model";
+import { Api409Error } from "../util/error-handler/Api409Error";
+import { Api500Error } from "../util/error-handler/Api500Error";
 
 export class UserRepository {
   public async createUser(

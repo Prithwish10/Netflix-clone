@@ -2,6 +2,7 @@ import config from "./config";
 import express from "express";
 import Logger from "./loaders/logger";
 import mongooseLoader from "./loaders/mongoose";
+import { Api500Error } from "./util/error-handler/Api500Error";
 
 async function startServer() {
   const app = express();
@@ -29,7 +30,8 @@ async function startServer() {
       ################################################
     `);
   } catch (err) {
-    throw err;
+    if(err instanceof Error)
+      throw new Api500Error(err.message);
   }
 }
 
