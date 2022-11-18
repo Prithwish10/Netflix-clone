@@ -16,8 +16,8 @@ export default ({ app }: { app: Application }) => {
   // Load API routes
   app.use(config.api.prefix, routes());
 
-   // catch 422 Error and forward to error handler
-   app.use(handle422Error);
+  // catch 422 Error and forward to error handler
+  app.use(handle422Error);
 
   // error handlers
   app.use(handleError);
