@@ -1,56 +1,65 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
+import { MovieController } from "../controllers/Movie.controller";
 import { UserController } from "../controllers/User.controller";
 import { authenticate, authRole } from "../middleware/auth.middleware";
 
 const route = Router();
 
 export default (app: Router) => {
-  app.use("/users", route);
+  app.use("/movies", route);
 
-  const userController = new UserController();
+  const movieController = new MovieController();
 
   route.get(
     "/",
     authenticate,
     async (req: Request, res: Response, next: NextFunction) => {
-      await userController.findAllUsers(req, res, next);
+      await movieController.findAllMovies(req, res, next);
     }
   );
 
   route.get(
-    "/stats",
+    "/random",
     authenticate,
     async (req: Request, res: Response, next: NextFunction) => {
-      await userController.getUserStat(req, res, next);
+      await movieController.findRandomMovie(req, res, next);
     }
   );
 
   route.get(
     "/:id",
     authenticate,
-    authRole('All'),
     async (req: Request, res: Response, next: NextFunction) => {
-      await userController.findUserById(req, res, next);
+      await movieController.findMovieById(req, res, next);
+    }
+  );
+
+  route.post(
+    "/",
+    authenticate,
+    authRole("Admin"),
+    async (req: Request, res: Response, next: NextFunction) => {
+      await movieController.createMovie(req, res, next);
     }
   );
 
   route.put(
     "/:id",
     authenticate,
-    authRole('Admin'),
+    authRole("Admin"),
     async (req: Request, res: Response, next: NextFunction) => {
-      await userController.updateUser(req, res, next);
+      await movieController.updateMovieById(req, res, next);
     }
   );
 
   route.delete(
     "/:id",
     authenticate,
-    authRole('Admin'),
+    authRole("Admin"),
     async (req: Request, res: Response, next: NextFunction) => {
-      await userController.deleteUserById(req, res, next);
+      await movieController.deleteMovieById(req, res, next);
     }
   );
 };

@@ -10,7 +10,7 @@ export class LoginWithEmailAndPasswordService {
   async loginWithEmailAndPassword(email: string, password: string) {
     const userRepository = new UserRepository();
     const user = await userRepository.getUserByEmail(email);
-    
+
     if (!user) {
       throw new Api401Error("Unauthorised");
     }
@@ -42,13 +42,11 @@ export class LoginWithEmailAndPasswordService {
 
     return { ...restUserInfo, accessToken, refreshToken };
   }
-  
 }
 
 interface TokenPayload {
   exp?: number;
   name: string;
   id: string;
-  isAdmin: string
+  isAdmin: string;
 }
-

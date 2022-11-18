@@ -22,4 +22,4 @@ const listSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("list", listSchema);
+module.exports = mongoose.model("List", listSchema);

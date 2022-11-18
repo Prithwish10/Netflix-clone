@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import { UserInputPayload } from "../../dto/IUser.dto";
+import { UserInputPayloadDTO } from "../../dto/User.dto";
 import config from "../../config/index";
 import Logger from "../../loaders/logger";
 import { UserRepository } from "../../repositories/User.repository";
@@ -7,7 +7,7 @@ import { Api500Error } from "../../util/error-handler/Api500Error";
 import { Api409Error } from "../../util/error-handler/Api409Error";
 
 export class SignUpService {
-  async register(userInputDTO: UserInputPayload) {
+  async register(userInputDTO: UserInputPayloadDTO) {
     Logger.debug("Inside signup service");
     const { username, email, password, profilePic, isAdmin } = userInputDTO;
 

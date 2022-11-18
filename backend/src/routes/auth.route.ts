@@ -19,7 +19,7 @@ export default (app: Router) => {
         await authController.signInWithEmailAndPassword(req, res, next);
     });
 
-    route.put('/password-reset/:id/:token', authenticate, authRole, async (req: Request, res: Response, next: NextFunction) => {
+    route.put('/password-reset/:id/:token', authenticate, authRole('All'), async (req: Request, res: Response, next: NextFunction) => {
         await authController.resetPassword(req, res, next);
     });
 }

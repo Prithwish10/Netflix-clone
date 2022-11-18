@@ -1,4 +1,4 @@
-import { UpdateUserPayload } from "../dto/IUser.dto";
+import { UpdateUserPayloadDTO } from "../dto/User.dto";
 import Logger from "../loaders/logger";
 import User from "../models/User.model";
 import { Api500Error } from "../util/error-handler/Api500Error";
@@ -75,7 +75,7 @@ export class UserRepository {
     }
   }
 
-  public async updateUserById(user: UpdateUserPayload) {
+  public async updateUserById(user: UpdateUserPayloadDTO) {
     try {
       Logger.debug("Update user by ID Data Access Layer invoked");
 
