@@ -6,15 +6,11 @@ import { Api500Error } from "../../util/error-handler/Api500Error";
 import config from "../../config/index";
 import Logger from "../../loaders/logger";
 import { Api400Error } from "../../util/error-handler/Api400Error";
-import { UpdateUserPayload } from "../../dto/IUser.dto";
+import { UpdateUserPayloadDTO } from "../../dto/User.dto";
 
 export class UserService {
   async findAll(page: number, limit: number, order: number, sort: string) {
     Logger.debug("Find user by Id method invoked");
-
-    if (!config.SecretKey || !config.jwtSecret) {
-      throw new Api500Error("Missing property in .env");
-    }
 
     const userRepository = new UserRepository();
     const users = await userRepository.getUsers(page, limit, order, sort);
@@ -24,10 +20,6 @@ export class UserService {
 
   async findById(id: string) {
     Logger.debug("Find user by Id method invoked");
-
-    if (!config.SecretKey || !config.jwtSecret) {
-      throw new Api500Error("Missing property in .env");
-    }
 
     const userRepository = new UserRepository();
     const user = await userRepository.getUserById(id);
@@ -39,7 +31,7 @@ export class UserService {
     return user;
   }
 
-  async update(userPayload: UpdateUserPayload) {
+  async update(userPayload: UpdateUserPayloadDTO) {
     Logger.debug("Update user method invoked");
 
     const { id, username, email, password, profilePic } = userPayload;
@@ -55,7 +47,7 @@ export class UserService {
       throw new Api401Error("Unathorised");
     }
 
-    let hashedPassword;
+    let hashedPassword: string = user.password;
 
     if (password) {
       hashedPassword = CryptoJS.AES.encrypt(
@@ -68,7 +60,7 @@ export class UserService {
       id,
       username: username ? username : user.username,
       email: email ? email : user.email,
-      password: password ? hashedPassword : user.password,
+      password: hashedPassword,
       profilePic: profilePic ? profilePic : user.profilePic,
     });
 
@@ -77,10 +69,6 @@ export class UserService {
 
   async deleteById(id: string) {
     Logger.debug("Delete user method invoked");
-
-    if (!config.SecretKey || !config.jwtSecret) {
-      throw new Api500Error("Missing property in .env");
-    }
 
     const userRepository = new UserRepository();
     const user = await userRepository.getUserById(id);

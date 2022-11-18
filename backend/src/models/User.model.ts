@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from "../dto/IUser.dto";
+import { IUser } from "../dto/User.dto";
 
 const userSchema = new mongoose.Schema(
   {

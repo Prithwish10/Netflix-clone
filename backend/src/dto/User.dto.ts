@@ -7,14 +7,14 @@ export interface IUser {
   isAdmin?: string;
   createdAt: Date;
   updatedAt: Date;
-  _doc: IUser
+  _doc: IUser;
 }
 
 // export interface UserDoc {
 //   _doc: IUser
 // }
 
-export interface UserInputPayload {
+export interface UserInputPayloadDTO {
   username: string;
   email: string;
   password: string;
@@ -22,12 +22,11 @@ export interface UserInputPayload {
   isAdmin?: string;
 }
 
-
-export interface UpdateUserPayload {
-  id: string,
-  email?: string,
-  password?: string,
-  username?: string,
-  profilePic?: string,
-  isAdmin?: string
+export interface UpdateUserPayloadDTO {
+  id: string;
+  email?: string;
+  password?: string;
+  username?: string;
+  profilePic?: string;
+  isAdmin?: string;
 }

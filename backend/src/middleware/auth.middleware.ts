@@ -3,7 +3,7 @@ import { Api401Error } from "../util/error-handler/Api401Error";
 import config from "../config/index";
 import { Api500Error } from "../util/error-handler/Api500Error";
 import jwt from "jsonwebtoken";
-import { IUser } from "../dto/IUser.dto";
+import { IUser } from "../dto/User.dto";
 import { TokenPayload } from "../dto/Token-payload.dto";
 import { Api403Error } from "../util/error-handler/Api403Error";
 import Logger from "../loaders/logger";
@@ -42,10 +42,20 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function authRole(req: Request, res: Response, next: NextFunction) {
-  if (req.params.id === req.user.id || req.user.isAdmin) {
-    next();
-  } else {
-    throw new Api403Error("Forbidden");
-  }
+export function authRole(role: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (role === "Admin") {
+      if (req.user.isAdmin) {
+        next();
+      } else {
+        throw new Api403Error("Forbidden");
+      }
+    } else {
+      if (req.params.id === req.user.id || req.user.isAdmin) {
+        next();
+      } else {
+        throw new Api403Error("Forbidden");
+      }
+    }
+  };
 }

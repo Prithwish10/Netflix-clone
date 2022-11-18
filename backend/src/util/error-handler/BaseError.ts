@@ -1,6 +1,7 @@
 export class BaseError extends Error {
   statusCode: number;
   isOperational: boolean;
+  name: string;
   constructor(
     name: string,
     statusCode: number,
@@ -8,7 +9,6 @@ export class BaseError extends Error {
     description: string
   ) {
     super(description);
-
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = name;
     this.statusCode = statusCode;

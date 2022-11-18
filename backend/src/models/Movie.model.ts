@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { IMovie } from "../dto/Movie.dto";
 
 const movieSchema = new mongoose.Schema(
   {
@@ -41,4 +42,4 @@ const movieSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("movie", movieSchema);
+export default mongoose.model<IMovie & mongoose.Document>("Movie", movieSchema);
