@@ -2,7 +2,6 @@
 
 import { Router, Request, Response, NextFunction } from "express";
 import { MovieController } from "../controllers/Movie.controller";
-import { UserController } from "../controllers/User.controller";
 import { authenticate, authRole } from "../middleware/auth.middleware";
 
 const route = Router();

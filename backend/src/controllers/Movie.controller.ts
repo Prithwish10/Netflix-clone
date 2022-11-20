@@ -1,10 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { MovieService } from "../services/movie/movie.service";
 import { createMovieSchema, updateMovieSchema } from "../services/movie/movie.validation.schema";
-import { UserService } from "../services/user/User.service";
-import { updateUserSchema } from "../services/user/user.validation.schema";
-import { Api403Error } from "../util/error-handler/Api403Error";
-import { Api500Error } from "../util/error-handler/Api500Error";
 
 export class MovieController {
   public async findMovieById(req: Request, res: Response, next: NextFunction) {

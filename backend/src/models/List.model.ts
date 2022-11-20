@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ListDTO } from "../dto/List.dto";
 
 const listSchema = new mongoose.Schema(
   {
@@ -22,4 +23,4 @@ const listSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("List", listSchema);
+export default mongoose.model<ListDTO & mongoose.Document>("List", listSchema);
