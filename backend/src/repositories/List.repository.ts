@@ -1,8 +1,10 @@
+import { Service } from "typedi";
 import Logger from "../loaders/logger";
 import { ListDTO } from "../dto/List.dto";
 import { Api500Error } from "../util/error-handler/Api500Error";
 import List from "../models/List.model";
 
+@Service()
 export class ListRepository {
   public async createList(list: ListDTO) {
     try {

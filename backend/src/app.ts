@@ -1,5 +1,6 @@
-import config from "./config";
+import "reflect-metadata";
 import express from "express";
+import config from "./config";
 import Logger from "./loaders/logger";
 import mongooseLoader from "./loaders/mongoose";
 import { Api500Error } from "./util/error-handler/Api500Error";
