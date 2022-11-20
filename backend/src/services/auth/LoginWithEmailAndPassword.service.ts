@@ -5,8 +5,12 @@ import Logger from "../../loaders/logger";
 import { UserRepository } from "../../repositories/User.repository";
 import { Api500Error } from "../../util/error-handler/Api500Error";
 import { Api401Error } from "../../util/error-handler/Api401Error";
+import { Service } from "typedi";
 
+@Service()
 export class LoginWithEmailAndPasswordService {
+  constructor(private readonly userRepository: UserRepository) {}
+
   async loginWithEmailAndPassword(email: string, password: string) {
     const userRepository = new UserRepository();
     const user = await userRepository.getUserByEmail(email);
@@ -42,11 +46,4 @@ export class LoginWithEmailAndPasswordService {
 
     return { ...restUserInfo, accessToken, refreshToken };
   }
-}
-
-interface TokenPayload {
-  exp?: number;
-  name: string;
-  id: string;
-  isAdmin: string;
 }

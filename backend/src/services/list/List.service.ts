@@ -1,12 +1,15 @@
+import { Service } from "typedi";
 import { ListDTO } from "../../dto/List.dto";
 import { ListRepository } from "../../repositories/List.repository";
 import { Api404Error } from "../../util/error-handler/Api404Error";
 
+@Service()
 export class ListService {
+  constructor(private readonly listRepository: ListRepository) {}
+
   public async create(list: ListDTO) {
     try {
-      const listRepository = new ListRepository();
-      const newList = await listRepository.createList(list);
+      const newList = await this.listRepository.createList(list);
 
       return newList;
     } catch (err) {
@@ -16,13 +19,12 @@ export class ListService {
 
   public async delete(id: string) {
     try {
-      const listRepository = new ListRepository();
-      const isListPresent = await listRepository.findById(id);
+      const isListPresent = await this.listRepository.findById(id);
 
       if (!isListPresent) {
         throw new Api404Error("List doesnot exist.");
       }
-      await listRepository.deleteById(id);
+      await this.listRepository.deleteById(id);
     } catch (err) {
       throw err;
     }
@@ -30,16 +32,15 @@ export class ListService {
 
   public async find(type: string, genre: string) {
     try {
-      const listRepository = new ListRepository();
       let list;
 
       if (type && genre) {
-        list = await listRepository.findByTypeAndGenre(type, genre);
+        list = await this.listRepository.findByTypeAndGenre(type, genre);
       } else if (type) {
-        list = await listRepository.findByType(type);
+        list = await this.listRepository.findByType(type);
       } else {
         // Else fetch random list
-        list = listRepository.findRandom();
+        list = this.listRepository.findRandom();
       }
 
       return list;

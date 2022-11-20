@@ -1,6 +1,7 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
+import Container from "typedi";
 import { UserController } from "../controllers/User.controller";
 import { authenticate, authRole } from "../middleware/auth.middleware";
 
@@ -9,7 +10,7 @@ const route = Router();
 export default (app: Router) => {
   app.use("/users", route);
 
-  const userController = new UserController();
+  const userController = Container.get(UserController);
 
   route.get(
     "/",
@@ -30,7 +31,7 @@ export default (app: Router) => {
   route.get(
     "/:id",
     authenticate,
-    authRole('All'),
+    authRole("All"),
     async (req: Request, res: Response, next: NextFunction) => {
       await userController.findUserById(req, res, next);
     }
@@ -39,7 +40,7 @@ export default (app: Router) => {
   route.put(
     "/:id",
     authenticate,
-    authRole('Admin'),
+    authRole("Admin"),
     async (req: Request, res: Response, next: NextFunction) => {
       await userController.updateUser(req, res, next);
     }
@@ -48,7 +49,7 @@ export default (app: Router) => {
   route.delete(
     "/:id",
     authenticate,
-    authRole('Admin'),
+    authRole("Admin"),
     async (req: Request, res: Response, next: NextFunction) => {
       await userController.deleteUserById(req, res, next);
     }

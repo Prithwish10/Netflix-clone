@@ -1,13 +1,16 @@
 import { Request, Response, NextFunction } from "express";
+import { Service } from "typedi";
 import { ListService } from "../services/list/List.service";
 import { createListSchema } from "../services/list/list.validation.schema";
 
+@Service()
 export class ListController {
+  constructor(private readonly listService: ListService) {}
+
   public async createList(req: Request, res: Response, next: NextFunction) {
     try {
-      const listService = new ListService();
       await createListSchema.validateAsync(req.body);
-      const list = await listService.create(req.body);
+      const list = await this.listService.create(req.body);
 
       return res.status(201).json({
         success: true,
@@ -21,8 +24,7 @@ export class ListController {
 
   public async findList(req: Request, res: Response, next: NextFunction) {
     try {
-      const listService = new ListService();
-      const list = await listService.find(
+      const list = await this.listService.find(
         req.query.type as string,
         req.query.genre as string
       );
@@ -39,8 +41,7 @@ export class ListController {
 
   public async deleteList(req: Request, res: Response, next: NextFunction) {
     try {
-      const listService = new ListService();
-      await listService.delete(req.params.id);
+      await this.listService.delete(req.params.id);
 
       return res.status(204).json({});
     } catch (err) {

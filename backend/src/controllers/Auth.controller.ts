@@ -8,16 +8,23 @@ import {
   loginWithEmailAndPasswordSchema,
   signupSchema,
 } from "../services/auth/auth.validation.schema";
+import { Service } from "typedi";
 
+@Service()
 export class AuthController {
+  constructor(
+    private readonly signupService: SignUpService,
+    private readonly loginWithEmailAndPasswordService: LoginWithEmailAndPasswordService,
+    private readonly resetPasswordService: ResetPasswordService
+  ) {}
+
   public async signup(req: Request, res: Response, next: NextFunction) {
     try {
       Logger.debug("Calling signup service with body: %o", req.body);
       // Validating the request body
       await signupSchema.validateAsync(req.body);
 
-      const signupService = new SignUpService();
-      const user = await signupService.register(req.body);
+      const user = await this.signupService.register(req.body);
 
       return res.status(201).json({
         success: true,
@@ -41,12 +48,9 @@ export class AuthController {
       // Validating the request body
       await loginWithEmailAndPasswordSchema.validateAsync(req.body);
 
-      const loginWithEmailAndPasswordService =
-        new LoginWithEmailAndPasswordService();
-
       const { email, password } = req.body;
       const data =
-        await loginWithEmailAndPasswordService.loginWithEmailAndPassword(
+        await this.loginWithEmailAndPasswordService.loginWithEmailAndPassword(
           email,
           password
         );
@@ -81,12 +85,10 @@ export class AuthController {
 
   public async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const resetPasswordService = new ResetPasswordService();
-
       await resetPasswordSchema.validateAsync(req.body);
 
       const { email, password } = req.body;
-      const user = await resetPasswordService.reset(
+      const user = await this.resetPasswordService.reset(
         req.params.id,
         req.params.token,
         email,
@@ -104,7 +106,9 @@ export class AuthController {
     }
   }
 
-  public async forgotPassword(req: Request, res: Response, next: NextFunction) {
-      
-  }
+  public async forgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {}
 }

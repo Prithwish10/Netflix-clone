@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express";
+import { Service } from "typedi";
 import { UserService } from "../services/user/User.service";
 import { updateUserSchema } from "../services/user/user.validation.schema";
 import { Api403Error } from "../util/error-handler/Api403Error";
-import { Api500Error } from "../util/error-handler/Api500Error";
 
+@Service()
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
   public async findUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const userService = new UserService();
-
-      const user = await userService.findById(req.params.id);
+      const user = await this.userService.findById(req.params.id);
 
       return res.status(200).json({
         success: true,
@@ -43,8 +44,7 @@ export class UserController {
       if (Number.isNaN(page) || page <= 0) page = 1;
       if (Number.isNaN(limit) || limit < 0 || limit >= 21) limit = 20;
 
-      const userService = new UserService();
-      const users = await userService.findAll(page, limit, order, sort);
+      const users = await this.userService.findAll(page, limit, order, sort);
 
       return res.status(200).json({
         success: true,
@@ -58,13 +58,11 @@ export class UserController {
 
   public async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const userService = new UserService();
-
       await updateUserSchema.validateAsync(req.body);
 
       const { email, username, password, profilePic } = req.body;
       const id = req.params.id;
-      const user = await userService.update({
+      const user = await this.userService.update({
         id,
         username,
         email,
@@ -85,9 +83,7 @@ export class UserController {
 
   public async deleteUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const userService = new UserService();
-
-      const user = await userService.deleteById(req.params.id);
+      const user = await this.userService.deleteById(req.params.id);
 
       return res.status(204).json({
         success: true,
@@ -102,9 +98,7 @@ export class UserController {
 
   public async getUserStat(req: Request, res: Response, next: NextFunction) {
     try {
-      const userService = new UserService();
-
-      const userStats = await userService.getUserStat();
+      const userStats = await this.userService.getUserStat();
 
       return res.status(200).json({
         success: true,

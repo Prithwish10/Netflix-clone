@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js";
+import { Service } from "typedi";
 import { UserRepository } from "../../repositories/User.repository";
 import { Api401Error } from "../../util/error-handler/Api401Error";
 import { Api403Error } from "../../util/error-handler/Api403Error";
@@ -7,7 +8,10 @@ import config from "../../config/index";
 import Logger from "../../loaders/logger";
 import { Api400Error } from "../../util/error-handler/Api400Error";
 
+@Service()
 export class ResetPasswordService {
+  constructor(private readonly userRepository: UserRepository) {}
+
   async reset(userId: string, token: string, email: string, password: string) {
     Logger.debug("Reset Password Service invoked");
     if (!config.SecretKey || !config.jwtSecret) {
@@ -28,8 +32,8 @@ export class ResetPasswordService {
     const bytes = CryptoJS.AES.decrypt(user.password, config.SecretKey);
     const currentPassword = bytes.toString(CryptoJS.enc.Utf8);
 
-    if(currentPassword === password) {
-        throw new Api400Error("New password is same as the old password");
+    if (currentPassword === password) {
+      throw new Api400Error("New password is same as the old password");
     }
 
     const hashedPassword = CryptoJS.AES.encrypt(
@@ -37,11 +41,17 @@ export class ResetPasswordService {
       config.SecretKey
     ).toString();
 
-    const updatedUser = await userRepository.updateUserById({
+    const updatedUser = await this.userRepository.updateUserById({
       id: userId,
       email,
       password: hashedPassword,
     });
+
+    // const updatedUser = await userRepository.updateUserById({
+    //   id: userId,
+    //   email,
+    //   password: hashedPassword,
+    // });
 
     return updatedUser;
   }

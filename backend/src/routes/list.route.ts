@@ -1,6 +1,7 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
+import Container from "typedi";
 import { ListController } from "../controllers/List.controller";
 import { authenticate, authRole } from "../middleware/auth.middleware";
 
@@ -9,7 +10,7 @@ const route = Router();
 export default (app: Router) => {
   app.use("/lists", route);
 
-  const listController = new ListController();
+  const listController = Container.get(ListController);
 
   route.post(
     "/",

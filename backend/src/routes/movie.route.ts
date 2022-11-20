@@ -1,6 +1,7 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
+import Container from "typedi";
 import { MovieController } from "../controllers/Movie.controller";
 import { authenticate, authRole } from "../middleware/auth.middleware";
 
@@ -9,7 +10,7 @@ const route = Router();
 export default (app: Router) => {
   app.use("/movies", route);
 
-  const movieController = new MovieController();
+  const movieController = Container.get(MovieController);
 
   route.get(
     "/",

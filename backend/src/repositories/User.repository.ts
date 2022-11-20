@@ -1,9 +1,12 @@
+import { Service } from "typedi";
 import { UpdateUserPayloadDTO } from "../dto/User.dto";
 import Logger from "../loaders/logger";
 import User from "../models/User.model";
 import { Api500Error } from "../util/error-handler/Api500Error";
 
+@Service()
 export class UserRepository {
+  
   public async createUser(
     username: string,
     email: string,
