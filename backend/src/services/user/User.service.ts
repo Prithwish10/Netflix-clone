@@ -1,19 +1,20 @@
 import CryptoJS from "crypto-js";
+import { Service } from "typedi";
 import { UserRepository } from "../../repositories/User.repository";
 import { Api401Error } from "../../util/error-handler/Api401Error";
-import { Api403Error } from "../../util/error-handler/Api403Error";
 import { Api500Error } from "../../util/error-handler/Api500Error";
 import config from "../../config/index";
 import Logger from "../../loaders/logger";
-import { Api400Error } from "../../util/error-handler/Api400Error";
 import { UpdateUserPayloadDTO } from "../../dto/User.dto";
 
+@Service()
 export class UserService {
+  constructor(private readonly userRepository: UserRepository) {}
+
   async findAll(page: number, limit: number, order: number, sort: string) {
     Logger.debug("Find user by Id method invoked");
 
-    const userRepository = new UserRepository();
-    const users = await userRepository.getUsers(page, limit, order, sort);
+    const users = await this.userRepository.getUsers(page, limit, order, sort);
 
     return users;
   }
@@ -21,8 +22,7 @@ export class UserService {
   async findById(id: string) {
     Logger.debug("Find user by Id method invoked");
 
-    const userRepository = new UserRepository();
-    const user = await userRepository.getUserById(id);
+    const user = await this.userRepository.getUserById(id);
 
     if (!user) {
       throw new Api401Error("User not found");
@@ -40,8 +40,7 @@ export class UserService {
       throw new Api500Error("Missing property in .env");
     }
 
-    const userRepository = new UserRepository();
-    const user = await userRepository.getUserById(id);
+    const user = await this.userRepository.getUserById(id);
 
     if (!user) {
       throw new Api401Error("Unathorised");
@@ -56,7 +55,7 @@ export class UserService {
       ).toString();
     }
 
-    const updatedUser = await userRepository.updateUserById({
+    const updatedUser = await this.userRepository.updateUserById({
       id,
       username: username ? username : user.username,
       email: email ? email : user.email,
@@ -70,14 +69,13 @@ export class UserService {
   async deleteById(id: string) {
     Logger.debug("Delete user method invoked");
 
-    const userRepository = new UserRepository();
-    const user = await userRepository.getUserById(id);
+    const user = await this.userRepository.getUserById(id);
 
     if (!user) {
       throw new Api401Error("Unathorised");
     }
 
-    await userRepository.deleteUserById(id);
+    await this.userRepository.deleteUserById(id);
   }
 
   async getUserStat() {
@@ -100,8 +98,7 @@ export class UserService {
       "December",
     ];
 
-    const userRepository = new UserRepository();
-    const userStats = await userRepository.getUserStat(monthsArray);
+    const userStats = await this.userRepository.getUserStat(monthsArray);
 
     return userStats;
   }

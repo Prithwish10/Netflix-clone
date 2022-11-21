@@ -1,12 +1,16 @@
 import { Request, Response, NextFunction } from "express";
+import { Service } from "typedi";
 import { MovieService } from "../services/movie/movie.service";
 import { createMovieSchema, updateMovieSchema } from "../services/movie/movie.validation.schema";
 
+@Service()
 export class MovieController {
+  constructor(private readonly movieService: MovieService) {}
+
   public async findMovieById(req: Request, res: Response, next: NextFunction) {
     try {
-      const movieService = new MovieService();
-      const movie = await movieService.findById(req.params.id);
+      // const movieService = new MovieService();
+      const movie = await this.movieService.findById(req.params.id);
 
       return res.status(200).json({
         success: true,
@@ -36,8 +40,8 @@ export class MovieController {
       if (Number.isNaN(page) || page <= 0) page = 1;
       if (Number.isNaN(limit) || limit < 0 || limit >= 21) limit = 20;
 
-      const movieService = new MovieService();
-      const movies = await movieService.findAll(page, limit, order, sort);
+      // const movieService = new MovieService();
+      const movies = await this.movieService.findAll(page, limit, order, sort);
 
       return res.status(200).json({
         success: true,
@@ -55,9 +59,9 @@ export class MovieController {
     next: NextFunction
   ) {
     try {
-      const movieService = new MovieService();
+      // const movieService = new MovieService();
       const type = req.params.type;
-      const featuredMovie = await movieService.findRandom(type);
+      const featuredMovie = await this.movieService.findRandom(type);
       return res.status(200).json({
         success: true,
         statusCode: 200,
@@ -70,10 +74,10 @@ export class MovieController {
 
   public async createMovie(req: Request, res: Response, next: NextFunction) {
     try {
-      const movieService = new MovieService();
+      // const movieService = new MovieService();
       await createMovieSchema.validateAsync(req.body);
 
-      const movie = await movieService.create(req.body);
+      const movie = await this.movieService.create(req.body);
 
       return res.status(200).json({
         success: true,
@@ -91,10 +95,10 @@ export class MovieController {
     next: NextFunction
   ) {
     try {
-      const movieService = new MovieService();
+      // const movieService = new MovieService();
       await updateMovieSchema.validateAsync(req.body);
 
-      const movie = await movieService.update(req.params.id, req.body);
+      const movie = await this.movieService.update(req.params.id, req.body);
 
       return res.status(200).json({
         success: true,
@@ -112,8 +116,8 @@ export class MovieController {
     next: NextFunction
   ) {
     try {
-      const movieService = new MovieService();
-      await movieService.deleteById(req.params.id);
+      // const movieService = new MovieService();
+      await this.movieService.deleteById(req.params.id);
 
       return res.status(204).json({
         success: true,

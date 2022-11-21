@@ -1,8 +1,10 @@
+import { Service } from "typedi";
 import { IMovie, UpdateMoviePayloadDTO } from "../dto/Movie.dto";
 import Movie from "../models/Movie.model";
 import Logger from "../loaders/logger";
 import { Api500Error } from "../util/error-handler/Api500Error";
 
+@Service()
 export class MovieRepository {
   public async findAll(
     page: number,
@@ -43,7 +45,7 @@ export class MovieRepository {
         ]);
       }
 
-      Logger.debug("Random movie or series %o",movieOrSeries);
+      Logger.debug("Random movie or series %o", movieOrSeries);
 
       return movieOrSeries;
     } catch (err) {
