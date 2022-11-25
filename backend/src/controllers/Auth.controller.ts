@@ -44,7 +44,7 @@ export class AuthController {
     next: NextFunction
   ) {
     try {
-      Logger.debug("Calling signup service with body: %o", req.body);
+      Logger.debug("Calling signin service with body: %o", req.body);
       // Validating the request body
       await loginWithEmailAndPasswordSchema.validateAsync(req.body);
 

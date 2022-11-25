@@ -1,8 +1,8 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Application } from "express";
+import morgan from "morgan";
 import cors from "cors";
 import routes from "../routes/index";
 import config from "../config/index";
-import { BaseError } from "../util/error-handler/BaseError";
 import {
   handle404Error,
   handle422Error,
@@ -15,6 +15,8 @@ export default ({ app }: { app: Application }) => {
   app.use(cors());
 
   app.use(express.json());
+
+  app.use(morgan("dev"));
 
   // Load API routes
   app.use(config.api.prefix, routes());

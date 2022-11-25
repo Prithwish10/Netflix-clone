@@ -9,7 +9,7 @@ async function startServer() {
   const app = express();
 
   try {
-    await require("./loaders/Express").default({ app });
+    await require("./loaders/express").default({ app });
 
     const mongoConnection = await mongooseLoader();
     Logger.info(`
